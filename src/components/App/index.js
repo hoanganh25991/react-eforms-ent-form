@@ -30,7 +30,7 @@ export default class App extends PureComponent {
     this.setState({quotationFile: name})
     const reader = new FileReader()
     reader.onload = (upload) => {
-      const base64 = upload.target.result
+      // const base64 = upload.target.result
       // _("[base64]", base64)
     }
     reader.readAsDataURL(firstFile)
@@ -109,11 +109,12 @@ export default class App extends PureComponent {
     return (
       <MuiThemeProvider>
         <div style={s.rootDiv}>
+          <div style={s.title}>ENT REQUEST</div>
           <div style={s.quesDiv}>
-            {questions.map(ques => this.getFormInput(ques))}
+            {questions.map(ques => <div key={ques.key}>{this.getFormInput(ques)}</div>)}
           </div>
+          <RaisedButton label={"Save"} primary={true} fullWidth={true} />
         </div>
-
       </MuiThemeProvider>
     )
   }
