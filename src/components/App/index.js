@@ -14,7 +14,6 @@ export default class App extends PureComponent {
   state = {
     questions: [],
     quotationFile: null,
-    date: null,
   }
 
   getShouldAskQuesList(){
@@ -41,13 +40,13 @@ export default class App extends PureComponent {
     inputElm.click()
   }
 
-  onChangeDate = (event, date) => {
+  onChangeDate = key => (event, date) => {
     _("[date]", date)
-    this.setState({date});
+    this.setState({key: date});
   };
 
   getFormInput = ques => {
-    const {isValid, title, type} = ques
+    const {isValid, title, type, key} = ques
     const rawTitle = title.replace(/[^a-zA-Z0-9\s]/g,'')
     switch (isValid){
       case "DATE": {
