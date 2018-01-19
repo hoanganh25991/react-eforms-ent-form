@@ -87,7 +87,14 @@ export default class App extends PureComponent {
   parsePayload(){
     try{
       const {location: {search}} = window
-      const base64 = search.replace("?payload=", "")
+      const params = search.split("&")
+      const payloadParam = params.filter(param => param.includes("?payload"))[0]
+      if(!payloadParam) {
+        _("[?payload=] Not found")
+        return
+      }
+      _("[payloadParam]", payloadParam)
+      const base64 = payloadParam.replace("?payload=", "")
       const str = atob(base64)
       const questions = JSON.parse(str)
       this.setState({questions})
@@ -110,7 +117,7 @@ export default class App extends PureComponent {
         <div style={s.rootDiv}>
           <div style={s.title}>ENT REQUEST</div>
           <div style={s.quesDiv}>
-            {questions.map(ques => <div key={ques.key}>{this.getFormInput(ques)}</div>)}
+            {questions.map((ques, index) => <div key={ques.key || index}>{this.getFormInput(ques)}</div>)}
           </div>
           <RaisedButton label={"Save"} primary={true} fullWidth={true} />
         </div>
