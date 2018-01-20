@@ -7,6 +7,7 @@ import React, { PureComponent, Fragment } from "react"
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 // import MenuItem from 'material-ui/MenuItem';
 // import {List, ListItem} from 'material-ui/List';
+// import thanksImg from "../../asset/img/thank-you.png"
 
 const _ = console.log
 
@@ -92,7 +93,7 @@ export default class App extends PureComponent {
     return string;
   }
 
-  parsePayload(){
+  parsePayload = () => {
     try{
       const {location: {search}} = window
       const params = search.split("&")
@@ -113,8 +114,36 @@ export default class App extends PureComponent {
     }
   }
 
+  loadMessengerSDK = () => {
+    (function(d, s, id){
+      let js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.com/en_US/messenger.Extensions.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'Messenger'));
+  }
+
+  closeWebview = () => {
+    const {MessengerExtensions} = window
+    if(!MessengerExtensions) return
+    MessengerExtensions.requestCloseBrowser(()=>{
+      _("[closeWebview] success")
+    }, (err) => {
+      _("[closeWebview][ERR]", err)
+    });
+  }
+
+  save = () => {
+    // const imgUrl = "https://tinker.press/images/cloud-icon-22.png"
+    // const messengerUrl = `https://www.messenger.com/closeWindow/?image_url=${imgUrl}&display_text=Thank You`
+    // window.location.href = messengerUrl
+    this.closeWebview()
+  }
+
   componentDidMount() {
     this.parsePayload()
+    this.loadMessengerSDK()
   }
 
   componentWillUnmount() {}
@@ -129,7 +158,7 @@ export default class App extends PureComponent {
           <div style={s.quesDiv}>
             {questions.map((ques, index) => <div key={ques.key || index}>{this.getFormInput(ques)}</div>)}
           </div>
-          <RaisedButton label={"Save"} primary={true} fullWidth={true} />
+          <RaisedButton label={"Save"} primary={true} fullWidth={true} onClick={this.save} />
         </div>
       </MuiThemeProvider>
     )
