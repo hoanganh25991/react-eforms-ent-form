@@ -84,19 +84,29 @@ export default class App extends PureComponent {
     }
   }
 
+  hexToString = (hex) => {
+    let string = '';
+    for (let i = 0; i < hex.length; i += 2) {
+      string += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    }
+    return string;
+  }
+
   parsePayload(){
     try{
       const {location: {search}} = window
       const params = search.split("&")
       const payloadParam = params.filter(param => param.includes("?payload"))[0]
+      _("[payloadParam]", payloadParam)
+
       if(!payloadParam) {
         _("[?payload=] Not found")
         return
       }
-      _("[payloadParam]", payloadParam)
-      const base64 = payloadParam.replace("?payload=", "")
-      const str = atob(base64)
-      const questions = JSON.parse(str)
+
+      const pHex = payloadParam.replace("?payload=", "")
+      const str = this.hexToString(pHex)
+      const {questions} = JSON.parse(str)
       this.setState({questions})
     }catch(err){
       _("[parsePayload][ERR]", err)
